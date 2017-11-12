@@ -84,7 +84,7 @@ void left(int angle){
     
   int speed=0;
   rightMotor->run(FORWARD);
-  leftMotor->run(BACKWARD);
+  leftMotor->run(FBACKWARD);
   for(int i=0; i<time; i++){
     if(i<200){
       speed=i;
