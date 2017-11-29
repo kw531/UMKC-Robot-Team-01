@@ -36,8 +36,8 @@ void setup() {
 }
 
 void loop() {
-  rightMotor->run(BACKWARD);
-  leftMotor->run(BACKWARD);
+  rightMotor->run(FORWARD);
+  leftMotor->run(FORWARD);
   rightMotor->setSpeed(100);
   leftMotor->setSpeed(100);
 
