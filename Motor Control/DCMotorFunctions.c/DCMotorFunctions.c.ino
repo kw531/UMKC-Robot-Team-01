@@ -6,8 +6,10 @@
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // Select which 'port' M1, M2, M3 or M4. In this case, M1
-Adafruit_DCMotor *rightMotor = AFMS.getMotor(1);
-Adafruit_DCMotor *leftMotor = AFMS.getMotor(2);
+Adafruit_DCMotor *rightMotorFront = AFMS.getMotor(4);
+Adafruit_DCMotor *rightMotorRear = AFMS.getMotor(3);
+Adafruit_DCMotor *leftMotorFront = AFMS.getMotor(1);
+Adafruit_DCMotor *leftMotorRear = AFMS.getMotor(2);
 
 void forward(int time);
 void backward(int time);
@@ -23,47 +25,61 @@ void setup() {
   //AFMS.begin(1000);  // OR with a different frequency, say 1KHz
 
   // Set the speed to start, from 0 (off) to 255 (max speed)
-  rightMotor->setSpeed(150);
-  leftMotor->setSpeed(150);
-
-  rightMotor->run(FORWARD);
-  leftMotor->run(FORWARD);
+  rightMotorFront->setSpeed(150);
+  rightMotorRear->setSpeed(150);
+  leftMotorFront->setSpeed(150);
+  leftMotorRear->setSpeed(150);
+  
+  rightMotorFront->run(FORWARD);
+  rightMotorRear->run(FORWARD);
+  leftMotorFront->run(FORWARD);
+  leftMotorRear->run(FORWARD);
 
   // turn on motor
-  rightMotor->run(RELEASE);
-  leftMotor->run(RELEASE);
+  rightMotorFront->run(RELEASE);
+  rightMotorRear->run(RELEASE);
+  leftMotorFront->run(RELEASE);
+  leftMotorRear->run(RELEASE);
 
 
 }
 
 void loop() {
-  forward(1000);
-  delay(2);
-  backward(1000);
-  delay(2);
+// forward(1000);
+//  delay(2);
+//  backward(1000);
+//  delay(2);
   left(90);
   delay(2);
-  right(90);
-  delay(5);
+//  right(90);
+//  delay(5);
 
 }
 
 void backward(int time) {
-  rightMotor->run(BACKWARD);
-  leftMotor->run(BACKWARD);
+  rightMotorFront->run(BACKWARD);
+  rightMotorRear->run(BACKWARD);
+  leftMotorFront->run(BACKWARD);
+  leftMotorRear->run(BACKWARD);
   for (int i = 0; i < time; i++) {
-    rightMotor->setSpeed(150);
-    leftMotor->setSpeed(150);
+    rightMotorFront->setSpeed(150);
+    rightMotorRear->setSpeed(150);
+    leftMotorFront->setSpeed(150);
+    leftMotorRear->setSpeed(150);
   }
   cleanUp();
 }
 
 void forward (int time) {
-  rightMotor->run(FORWARD);
-  leftMotor->run(FORWARD);
+  rightMotorFront->run(FORWARD);
+  rightMotorRear->run(FORWARD);
+  leftMotorFront->run(FORWARD);
+  leftMotorRear->run(FORWARD);
   for (int i = 0; i < time; i++) {
-    rightMotor->setSpeed(150);
-    leftMotor->setSpeed(150);
+    rightMotorFront->setSpeed(150);
+    rightMotorRear->setSpeed(150);
+    leftMotorFront->setSpeed(150);
+    leftMotorRear->setSpeed(150);
   }
   cleanUp();
 }
@@ -72,24 +88,28 @@ void left(int angle) {
   int time;
   switch (angle) {
     case 45:
-      time = 500;
+      time = 400;
       break;
     case 90:
-      time = 1000;
+      time = 750;
       break;
     default:
       time = 0;
   }
 
   int speed = 0;
-  rightMotor->run(FORWARD);
-  leftMotor->run(BACKWARD);
+  rightMotorFront->run(FORWARD);
+  rightMotorRear->run(FORWARD);
+  leftMotorFront->run(BACKWARD);
+  leftMotorRear->run(BACKWARD);
   for (int i = 0; i < time; i++) {
     if (i < 200) {
       speed = i;
     } else speed = 200;
-    rightMotor->setSpeed(speed);
-    leftMotor->setSpeed(speed);
+    rightMotorFront->setSpeed(speed);
+    rightMotorRear->setSpeed(speed);
+    leftMotorFront->setSpeed(speed);
+    leftMotorRear->setSpeed(0);
   }
   cleanUp();
 }
@@ -108,20 +128,26 @@ void right(int angle) {
   }
 
   int speed = 0;
-  rightMotor->run(BACKWARD);
-  leftMotor->run(FORWARD);
+  rightMotorFront->run(BACKWARD);
+  rightMotorRear->run(BACKWARD);
+  leftMotorFront->run(FORWARD);
+  leftMotorRear->run(FORWARD);
   for (int i = 0; i < time; i++) {
     if (i < 200) {
       speed = i;
     } else speed = 200;
-    rightMotor->setSpeed(speed);
-    leftMotor->setSpeed(speed);
+    rightMotorFront->setSpeed(speed);
+    rightMotorRear->setSpeed(speed);
+    leftMotorFront->setSpeed(speed);
+    leftMotorRear->setSpeed(speed);
   }
   cleanUp();
 
 }
 void cleanUp() {
-  rightMotor->run(RELEASE);
-  leftMotor->run(RELEASE);
+  rightMotorFront->run(RELEASE);
+  rightMotorRear->run(RELEASE);
+  leftMotorFront->run(RELEASE);
+  leftMotorRear->run(RELEASE);
 }
 
