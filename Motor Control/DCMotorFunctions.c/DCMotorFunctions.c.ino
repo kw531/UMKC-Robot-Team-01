@@ -49,9 +49,9 @@ void loop() {
 //  delay(2);
 //  backward(1000);
 //  delay(2);
-  left(90);
+//  left(45);
   delay(2);
-//  right(90);
+  right(45);
 //  delay(5);
 
 }
@@ -118,10 +118,10 @@ void right(int angle) {
   int time;
   switch (angle) {
     case 45:
-      time = 500;
+      time = 370;
       break;
     case 90:
-      time = 1000;
+      time = 730;
       break;
     default:
       time = 0;
@@ -137,7 +137,7 @@ void right(int angle) {
       speed = i;
     } else speed = 200;
     rightMotorFront->setSpeed(speed);
-    rightMotorRear->setSpeed(speed);
+    rightMotorRear->setSpeed(0);
     leftMotorFront->setSpeed(speed);
     leftMotorRear->setSpeed(speed);
   }
