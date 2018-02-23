@@ -15,6 +15,7 @@
 *.so
 *.dylib
 *.dll
+*.tmp
 
 # Fortran module files
 *.mod
@@ -134,3 +135,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 .ini
+*.ini
+*.tmp
+.tmp
