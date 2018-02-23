@@ -18,9 +18,9 @@ if ver == 0x44:
  bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
  bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
 
- t_end=time.time()+10 #10 second test
- while time.time()<t_end:
-     #Reads in the data
+
+ while 1: #Runs FOREVER
+    #Reads in the data
   data = bus.read_i2c_block_data(0x29, 0)
   clear = clear = data[1] << 8 | data[0]
   red = data[3] << 8 | data[2]
@@ -34,29 +34,29 @@ if ver == 0x44:
   pR=float(red)/float(totalRGB)
   pG=float(green)/float(totalRGB)
   pB=float(blue)/float(totalRGB)
-  print (pR)
-  print (pG)
-  print (pB)
+  print pR
+  print pG
+  print pB
 
     #Prints color to screen
   if pR > .10 and pR <.29 and  pG>.26 and pG<.32 and pB>.39 and pB<.60:
-      print ("Blue\n")
+      print "Blue\n"
   elif pR > .10 and pR <.28 and  pG>.32 and pG<.40 and pB>.37 and pB<.48:
-      print ("Cyan\n")
+      print "Cyan\n"
   elif pR > .10 and pR <.32 and  pG>.38 and pG<.60 and pB>.25 and pB<.35:
-      print ("Green\n")
+      print "Green\n"
   elif pR > .30 and pR <.55 and  pG>.28 and pG<.55 and pB>.1 and pB<.25:
-      print ("Yellow\n")
+      print "Yellow\n"
   elif pR > .35 and pR <.50 and  pG>.20 and pG<.30 and pB>.20 and pB<.30:
-      print ("Pink\n")
+      print "Pink\n"
   elif pR > .50 and pR <.80 and  pG>.10 and pG<.25 and pB>.10 and pB<.25:
-      print ("Red\n")
+      print "Red\n"
   elif pR > .25 and pR <.37 and  pG>.26 and pG<.37 and pB>.26 and pB<.37:
-      print ("Gray\n")
+      print "Gray\n"
   else:
-      print ("Dunno.\n")
+      print "Dunno.\n"
 
-  time.sleep(.5)
+  time.sleep(.2)
 else: 
- print ("Device not found\n")
+ print "Device not found\n"
 
