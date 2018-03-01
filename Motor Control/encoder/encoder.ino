@@ -1,33 +1,77 @@
-// just reading the encoder, nothing else.
-
-int encoderValue_A = 0;
-int encoderValue_B = 0; 
-
+/*
+ * Encoder example sketch
+ * by Andrew Kramer
+ * 1/1/2016
+ *
+ * Records encoder ticks for each wheel
+ * and prints the number of ticks for
+ * each encoder every 500ms
+ *
+ */
+ 
+// pins for the encoder inputs
+#define RH_ENCODER_A 21 
+#define RH_ENCODER_B 46
+#define LH_ENCODER_A 20
+#define LH_ENCODER_B 44
+ 
+// variables to store the number of encoder pulses
+// for each motor
+volatile unsigned long leftCount = 0;
+volatile unsigned long rightCount = 0;
+ 
 void setup() {
-
+  pinMode(LH_ENCODER_A, INPUT);
+  pinMode(LH_ENCODER_B, INPUT);
+  pinMode(RH_ENCODER_A, INPUT);
+  pinMode(RH_ENCODER_B, INPUT);
+  
+  // initialize hardware interrupts
+  attachInterrupt(3, leftEncoderEvent, CHANGE);
+  attachInterrupt(2, rightEncoderEvent, CHANGE);
+  
   Serial.begin(9600);
-
-  pinMode(2, INPUT);
-  pinMode(3, INPUT);
-
-  attachInterrupt(digitalPinToInterrupt(2), countA, FALLING);
-  attachInterrupt(digitalPinToInterrupt(3), countB, FALLING);
 }
-
+ 
 void loop() {
-
-      // send the values
-      Serial.write(5);
-      Serial.write(encoderValue_B);
+  Serial.print("Right Count: ");
+  Serial.println(rightCount);
+  Serial.print("Left Count: ");
+  Serial.println(leftCount);
+  Serial.println();
+  delay(500);
 }
-
-
-void countA() {
-
-  encoderValue_A++;  
+ 
+// encoder event for the interrupt call
+void leftEncoderEvent() {
+  if (digitalRead(LH_ENCODER_A) == HIGH) {
+    if (digitalRead(LH_ENCODER_B) == LOW) {
+      leftCount--;
+    } else {
+      leftCount++;
+    }
+  } else {
+    if (digitalRead(LH_ENCODER_B) == LOW) {
+      leftCount++;
+    } else {
+      leftCount--;
+    }
+  }
 }
-
-void countB() {
-
-  encoderValue_B++;  
+ 
+// encoder event for the interrupt call
+void rightEncoderEvent() {
+  if (digitalRead(RH_ENCODER_A) == HIGH) {
+    if (digitalRead(RH_ENCODER_B) == LOW) {
+      rightCount++;
+    } else {
+      rightCount--;
+    }
+  } else {
+    if (digitalRead(RH_ENCODER_B) == LOW) {
+      rightCount--;
+    } else {
+      rightCount++;
+    }
+  }
 }
