@@ -10,9 +10,9 @@
  */
  
 // pins for the encoder inputs
-#define RH_ENCODER_A 21 
+#define RH_ENCODER_A 19
 #define RH_ENCODER_B 46
-#define LH_ENCODER_A 20
+#define LH_ENCODER_A 18
 #define LH_ENCODER_B 44
  
 // variables to store the number of encoder pulses
@@ -27,8 +27,8 @@ void setup() {
   pinMode(RH_ENCODER_B, INPUT);
   
   // initialize hardware interrupts
-  attachInterrupt(3, leftEncoderEvent, CHANGE);
-  attachInterrupt(2, rightEncoderEvent, CHANGE);
+  attachInterrupt(5, leftEncoderEvent, CHANGE);
+  attachInterrupt(4, rightEncoderEvent, CHANGE);
   
   Serial.begin(9600);
 }
