@@ -7,8 +7,6 @@
 
 // IMU
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
-int IMUrst = 27;
-
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMSc = Adafruit_MotorShield(0x60); // Conveyor
@@ -49,18 +47,14 @@ void setup() {
   // Conveyor Setup
   AFMSc.begin();  // create with the default frequency 1.6KHz
 
-  // Set the speed to start, from 0 (off) to 255 (max speed)
   cnvyr1->setSpeed(150);
   cnvyr1->run(FORWARD);
-  // turn on motor
   cnvyr1->run(RELEASE);
-  // Set the speed to start, from 0 (off) to 255 (max speed)
   cnvyr2->setSpeed(150);
   cnvyr2->run(FORWARD);
-  // turn on motor
   cnvyr2->run(RELEASE);
 
-  // Drive Setup
+  // Driver Setup
   AFMSd.begin();  // create with the default frequency 1.6KHz
 
   // Set the speed to start, from 0 (off) to 255 (max speed)
@@ -74,21 +68,19 @@ void setup() {
   leftMotorFront->run(FORWARD);
   leftMotorRear->run(FORWARD);
 
-  // turn on motor
   rightMotorFront->run(RELEASE);
   rightMotorRear->run(RELEASE);
   leftMotorFront->run(RELEASE);
   leftMotorRear->run(RELEASE);
 
   //IMU setup
-  Serial.println("Orientation Sensor Test"); Serial.println("");
+  Serial.println("Jolene, Jolene, Jolene, Jolene. Oh I begging of you please don't steal my man..."); Serial.println("");
 
   if (!bno.begin()) {
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
     while (1);
   }
-  pinMode(IMUrst, OUTPUT);
-  digitalWrite(IMUrst, HIGH);
+
 
   delay(1000);
 
@@ -106,19 +98,29 @@ void loop() {
   cnvyr2->setSpeed(255);
 
   //  /* Get a new sensor event */
-  //  sensors_event_t event;
-  //  bno.getEvent(&event);
-  //
-  //  /* Display the floating point data */
-  //  Serial.print("X: ");
-  //  Serial.print(event.orientation.x, 4);
-  //  Serial.print("\tY: ");
-  //  Serial.print(event.orientation.y, 4);
-  //  Serial.print("\tZ: ");
-  //  Serial.print(event.orientation.z, 4);
-  //  Serial.println("");
+  sensors_event_t event;
+  bno.getEvent(&event);
 
+  /* Display the floating point data */
+  Serial.print("X: ");
+  Serial.print(event.orientation.x, 4);
+  Serial.print("\tY: ");
+  Serial.print(event.orientation.y, 4);
+  Serial.print("\tZ: ");
+  Serial.print(event.orientation.z, 4);
+  Serial.println("");
+
+  delay(5000);
+  forward(31);
   right(90);
+  forward(12);
+  left(90);
+  forward(24);
+  left(90);
+  forward(28);
+  left(90);
+  forward(24);
+  delay(5000);
 
 }
 
@@ -168,69 +170,45 @@ void forward (int dist) {
 }
 //
 void left(int angle) {
-  int time;
-  switch (angle) {
-    case 45:
-      time = 400;
-      break;
-    case 90:
-      time = 750;
-      break;
-    default:
-      time = 0;
-  }
+  // turning left = higher angle on IMU
 
-  int speed = 0;
-  rightMotorFront->run(FORWARD);
-  rightMotorRear->run(FORWARD);
-  leftMotorFront->run(BACKWARD);
-  leftMotorRear->run(BACKWARD);
-  for (int i = 0; i < time; i++) {
-    if (i < 200) {
-      speed = i;
-    } else speed = 200;
+  int IMUangle = 0;
+  int speed;
+  rightMotorFront->run(BACKWARD);
+  rightMotorRear->run(BACKWARD);
+  leftMotorFront->run(FORWARD);
+  leftMotorRear->run(FORWARD);
+
+  sensors_event_t event;
+  bno.getEvent(&event);
+  IMUangle = event.orientation.x;
+
+  Serial.print("\tLeft turn X: ");
+  Serial.print(event.orientation.x, 0);
+  Serial.println("");
+  while (IMUangle > 360 - (angle - 3) || IMUangle < 2) {
+    sensors_event_t event;
+    bno.getEvent(&event);
+    IMUangle = event.orientation.x;
+
+    speed = 150;
+
     rightMotorFront->setSpeed(speed);
     rightMotorRear->setSpeed(speed);
     leftMotorFront->setSpeed(speed);
     leftMotorRear->setSpeed(speed);
+
+
   }
   cleanUp();
+  IMUreset();
 }
 
 
 void right(int angle) {
-  //  int time;
-  //  switch (angle) {
-  //    case 45:
-  //      time = 370;
-  //      break;
-  //    case 90:
-  //      time = 730;
-  //      break;
-  //    default:
-  //      time = 0;
-  //  }
-  //
-  //  int speed = 0;
-  //  rightMotorFront->run(BACKWARD);
-  //  rightMotorRear->run(BACKWARD);
-  //  leftMotorFront->run(FORWARD);
-  //  leftMotorRear->run(FORWARD);
-  //  for (int i = 0; i < time; i++) {
-  //    if (i < 200) {
-  //      speed = i;
-  //    } else speed = 200;
-  //    rightMotorFront->setSpeed(speed);
-  //    rightMotorRear->setSpeed(0);
-  //    leftMotorFront->setSpeed(speed);
-  //    leftMotorRear->setSpeed(speed);
-  //  }
-  //  cleanUp();
-
-
-  int warmup = 0;
-  int speed = 0;
-
+  // Turning right = smaller angle on IMU
+  int IMUangle = 0;
+  int speed;
   rightMotorFront->run(FORWARD);
   rightMotorRear->run(FORWARD);
   leftMotorFront->run(BACKWARD);
@@ -238,36 +216,24 @@ void right(int angle) {
 
   sensors_event_t event;
   bno.getEvent(&event);
+  IMUangle = event.orientation.x;
 
-  while (event.orientation.x < (angle - 1)) {
-    //    if (warmup == 0) {
-    //      int i = 0;
-    //      while (i != 200) {
-    //        speed = i;
-    //      }
-    //      rightMotorFront->setSpeed(speed);
-    //      rightMotorRear->setSpeed(speed);
-    //      leftMotorFront->setSpeed(speed);
-    //      leftMotorRear->setSpeed(speed);
-    //      i++;
-    //    } else {
-    //      speed = 200;
-    //    }
-    //  }
-    //  warmup = 1;
-    speed = 200;
+  while (IMUangle < (angle - 1) || IMUangle >= 359) {
+    sensors_event_t event;
+    bno.getEvent(&event);
+    IMUangle = event.orientation.x;
 
-
+    speed = 150;
 
     rightMotorFront->setSpeed(speed);
-    rightMotorRear->setSpeed(0);
+    rightMotorRear->setSpeed(speed);
     leftMotorFront->setSpeed(speed);
     leftMotorRear->setSpeed(speed);
 
-    cleanUp();
 
-    IMUreset();
   }
+  cleanUp();
+  IMUreset();
 }
 
 
@@ -280,10 +246,6 @@ void cleanUp() {
 
 void IMUreset() {
   // Resets the IMU so that the calibration is zero after a turn
-  digitalWrite(IMUrst, LOW);
-  delay(10);
-  digitalWrite(IMUrst, HIGH);
-  delay(10);
   bno.begin();
   delay(800);
 }
