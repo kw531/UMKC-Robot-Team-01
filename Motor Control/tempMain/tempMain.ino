@@ -171,7 +171,7 @@ void forward (int dist) {
 //
 void left(int angle) {
   // turning left = higher angle on IMU
-
+  IMUreset();
   int IMUangle = 0;
   int speed;
   rightMotorFront->run(BACKWARD);
@@ -201,12 +201,12 @@ void left(int angle) {
 
   }
   cleanUp();
-  IMUreset();
 }
 
 
 void right(int angle) {
   // Turning right = smaller angle on IMU
+  IMUreset();
   int IMUangle = 0;
   int speed;
   rightMotorFront->run(FORWARD);
@@ -233,7 +233,6 @@ void right(int angle) {
 
   }
   cleanUp();
-  IMUreset();
 }
 
 
