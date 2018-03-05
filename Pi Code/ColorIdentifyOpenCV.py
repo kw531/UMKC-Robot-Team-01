@@ -28,7 +28,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     hsv = cv2.cvtColor(blur,cv2.COLOR_BGR2HSV)
 
     # define range of color in HSV
-    lower = np.array([77,0,0])
+    lower = np.array([77,0,1])
     upper = np.array([99,255,255])
     
     lower_mag = np.array([150,50,5]) # Good
