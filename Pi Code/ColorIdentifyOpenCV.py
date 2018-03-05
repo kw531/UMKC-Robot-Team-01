@@ -27,21 +27,21 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     #hsv to complicate things, or stick with BGR
     hsv = cv2.cvtColor(blur,cv2.COLOR_BGR2HSV)
 
-    # define range of blue color in HSV
-    lower = np.array([26,50,50])
-    upper = np.array([49,255,255])
+    # define range of color in HSV
+    lower = np.array([0,50,50])
+    upper = np.array([12,255,255])
     
-    lower_mag = np.array([140,207,202]) #check
+    lower_mag = np.array([140,207,202]) #Needs work
     upper_mag = np.array([167,255,255])
-    lower_red = np.array([168,50,50]) # better - needs work
-    upper_red = np.array([180,255,255])
-    lower_green = np.array([50,100,50]) # better - needs work
+    lower_red = np.array([0,50,50]) # Needs Work
+    upper_red = np.array([12,255,255])
+    lower_green = np.array([50,100,50]) # OKish
     upper_green = np.array([76,255,180])
-    lower_yellow = np.array([26,50,50]) # better - needs work
+    lower_yellow = np.array([26,50,50]) # Good
     upper_yellow = np.array([49,255,255])
-    lower_cyan = np.array([77,207,202]) #check
+    lower_cyan = np.array([77,207,202]) # OKish
     upper_cyan = np.array([99,255,255])
-    lower_blue = np.array([100,0,0]) #check
+    lower_blue = np.array([110,0,0]) # OKish
     Rupper_blue = np.array([130,255,255])
 
     # Threshold the HSV image to get only blue colors
