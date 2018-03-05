@@ -28,12 +28,12 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     hsv = cv2.cvtColor(blur,cv2.COLOR_BGR2HSV)
 
     # define range of color in HSV
-    lower = np.array([0,50,50])
-    upper = np.array([12,255,255])
+    lower = np.array([77,0,0])
+    upper = np.array([99,255,255])
     
-    lower_mag = np.array([140,207,202]) #Needs work
-    upper_mag = np.array([167,255,255])
-    lower_red = np.array([0,50,50]) # Needs Work
+    lower_mag = np.array([150,50,5]) # Good
+    upper_mag = np.array([177,255,255])
+    lower_red = np.array([0,50,50]) # Good
     upper_red = np.array([12,255,255])
     lower_green = np.array([50,100,50]) # OKish
     upper_green = np.array([76,255,180])
@@ -46,12 +46,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     # Threshold the HSV image to get only blue colors
     mask = cv2.inRange(hsv, lower, upper)
+    kernel = np.ones((5,5), np.uint8)
+    erode= cv2.erode(mask, kernel, iterations=2)
 
     # Bitwise-AND mask and original image
 #    res = cv2.bitwise_and(frame,frame, mask= mask)
 
 #    cv2.imshow("frame",frame)
-    cv2.imshow("mask",mask)
+    cv2.imshow("erode",erode)
 #    cv2.imshow('res',res)
     rawCapture.truncate(0)
  
