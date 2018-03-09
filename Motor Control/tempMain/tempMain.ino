@@ -74,7 +74,7 @@ void setup() {
   leftMotorRear->run(RELEASE);
 
   //IMU setup
-  Serial.println("Jolene, Jolene, Jolene, Jolene. Oh I begging of you please don't steal my man..."); Serial.println("");
+  Serial.println("Do not destory humanity, not even once, not even as a joke"); Serial.println("");
 
   if (!bno.begin()) {
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
@@ -110,17 +110,25 @@ void loop() {
   Serial.print(event.orientation.z, 4);
   Serial.println("");
 
-  delay(5000);
-  forward(31);
-  right(90);
-  forward(12);
-  left(90);
-  forward(24);
-  left(90);
-  forward(28);
-  left(90);
-  forward(24);
-  delay(5000);
+    delay(5000);
+    forward(30);
+    right(90);
+    forward(11);
+    left(90);
+    forward(24);
+    left(90);
+    forward(26);
+    left(90);
+    forward(24);
+    right(45);
+    forward(18);
+    right(135);
+    forward(46);
+    delay(5000);
+
+//  delay(2000);
+//  forward(30);
+
 
 }
 
@@ -152,7 +160,9 @@ void forward (int dist) {
   leftCount = 0;
   rightCount = 0;
   unsigned long ticks;
-
+  sensors_event_t event;
+  float IMUangle;
+  
   ticks = dist * 229; //229 ticks per inch
 
   rightMotorFront->run(FORWARD);
@@ -160,6 +170,20 @@ void forward (int dist) {
   leftMotorFront->run(FORWARD);
   leftMotorRear->run(FORWARD);
   do {
+//    
+//    bno.getEvent(&event);
+//    IMUangle = event.orientation.x;
+//    if(IMUangle > 1.0 && IMUangle <340 ){
+//      left(1);
+//        Serial.print("\drift left X: ");
+//        Serial.print(event.orientation.x, 0);
+//        Serial.println("");
+//    } else if(IMUangle < 359 && IMUangle > 300){
+//      right(1);
+//        Serial.print("\right turn X: ");
+//        Serial.print(event.orientation.x, 0);
+//        Serial.println("");
+//    }
     rightMotorFront->setSpeed(150);
     rightMotorRear->setSpeed(150);
     leftMotorFront->setSpeed(150);
@@ -169,10 +193,10 @@ void forward (int dist) {
   cleanUp();
 }
 //
-void left(int angle) {
+void left(float angle) {
   // turning left = higher angle on IMU
-  IMUreset();
-  int IMUangle = 0;
+
+  float IMUangle = 0;
   int speed;
   rightMotorFront->run(BACKWARD);
   rightMotorRear->run(BACKWARD);
@@ -184,29 +208,35 @@ void left(int angle) {
   IMUangle = event.orientation.x;
 
   Serial.print("\tLeft turn X: ");
-  Serial.print(event.orientation.x, 0);
+  Serial.print(event.orientation.x, 2);
   Serial.println("");
-  while (IMUangle > 360 - (angle - 3) || IMUangle < 2) {
+  while (IMUangle > 360.0 - angle || IMUangle < 2.0) {
     sensors_event_t event;
     bno.getEvent(&event);
     IMUangle = event.orientation.x;
-
-    speed = 150;
-
-    rightMotorFront->setSpeed(speed);
-    rightMotorRear->setSpeed(speed);
-    leftMotorFront->setSpeed(speed);
-    leftMotorRear->setSpeed(speed);
-
-
+    
+    if (IMUangle < 360.0 - (angle - (angle * .1))) {
+      speed = 80;
+      rightMotorFront->setSpeed(speed);
+      rightMotorRear->setSpeed(speed);
+      leftMotorFront->setSpeed(speed);
+      leftMotorRear->setSpeed(speed);
+    } else {
+      speed = 150;
+      rightMotorFront->setSpeed(speed);
+      rightMotorRear->setSpeed(speed);
+      leftMotorFront->setSpeed(speed);
+      leftMotorRear->setSpeed(speed);
+    }
   }
   cleanUp();
+  IMUreset();
 }
 
 
 void right(int angle) {
   // Turning right = smaller angle on IMU
-  IMUreset();
+
   int IMUangle = 0;
   int speed;
   rightMotorFront->run(FORWARD);
@@ -218,21 +248,29 @@ void right(int angle) {
   bno.getEvent(&event);
   IMUangle = event.orientation.x;
 
-  while (IMUangle < (angle - 1) || IMUangle >= 359) {
+  while (IMUangle < (angle) || IMUangle >= 359) {
     sensors_event_t event;
     bno.getEvent(&event);
     IMUangle = event.orientation.x;
 
-    speed = 150;
-
-    rightMotorFront->setSpeed(speed);
-    rightMotorRear->setSpeed(speed);
-    leftMotorFront->setSpeed(speed);
-    leftMotorRear->setSpeed(speed);
-
-
+    if (IMUangle >= (angle - (angle * .1))) {
+      speed = 80;
+      rightMotorFront->setSpeed(speed);
+      rightMotorRear->setSpeed(speed);
+      leftMotorFront->setSpeed(speed);
+      leftMotorRear->setSpeed(speed);
+    }
+    else
+    {
+      speed = 150;
+      rightMotorFront->setSpeed(speed);
+      rightMotorRear->setSpeed(speed);
+      leftMotorFront->setSpeed(speed);
+      leftMotorRear->setSpeed(speed);
+    }
   }
   cleanUp();
+  IMUreset();
 }
 
 
@@ -246,7 +284,7 @@ void cleanUp() {
 void IMUreset() {
   // Resets the IMU so that the calibration is zero after a turn
   bno.begin();
-  delay(800);
+  delay(700);
 }
 
 // encoder event for the interrupt call
