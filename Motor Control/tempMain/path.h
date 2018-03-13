@@ -23,14 +23,14 @@
 //    forward(43);
 void performMovement(char c, int n);
 char round1PickupCode[] = {'f', // travel to box 1
-                                                'r', 'f', 'l', 'f', 'l', // box 1
-                                                'f', 'l', // travel to box 3
-                                                'f', 'r', 'f', 'r', 'f', 'r', 'f', 'r', 'f'}; // box 3
+                                                'r', 'f', 'l', 'f', 'l', 'f', 'l', 'f', // box 1
+                                                'r', 'f', // travel to box 3
+                                                'r', 'b' ,'f', 'r', 'f', 'r', 'f'}; // box 3
                                                 
 int round1Pickup[] = {30, // travel to box 1 
-                                            90, 11, 90, 24, 90, 26, 90, 24, 45, // box 1
-                                            14, 135, // travel to box 3 
-                                            43, 90, 43, 90, 43};  // box 3
+                                            90, 11, 90, 24, 90, 26, 90, 24, // box 1
+                                            45, 14, // travel to box 3 
+                                            135, 5, 48, 90, 43, 90, 45};  // box 3
 
 void roundOne() {
   Serial.println(sizeof(round1PickupCode)); Serial.println("");

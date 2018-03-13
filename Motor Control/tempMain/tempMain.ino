@@ -7,8 +7,8 @@ void setup() {
 
 void loop() {
 
-  runConveyor();
-  delay(5000);
+  //runConveyor();
+  delay(2000);
   roundOne();
   delay(5000);
 

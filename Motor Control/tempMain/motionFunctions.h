@@ -30,7 +30,6 @@ void IMUSetup() {
 
 void conveyorSetup() {
 
-  // Conveyor Setup
   AFMSc.begin();  // create with the default frequency 1.6KHz
 
   cnvyr1->setSpeed(150);
@@ -42,14 +41,15 @@ void conveyorSetup() {
 }
 
 void driversSetup() {
-  // Driver Setup
+
   AFMSd.begin();  // create with the default frequency 1.6KHz
 
   // Set the speed to start, from 0 (off) to 255 (max speed)
-  rightMotorFront->setSpeed(150);
-  rightMotorRear->setSpeed(150);
-  leftMotorFront->setSpeed(150);
-  leftMotorRear->setSpeed(150);
+  int driveSpeed = 150;
+  rightMotorFront->setSpeed(driveSpeed);
+  rightMotorRear->setSpeed(driveSpeed);
+  leftMotorFront->setSpeed(driveSpeed);
+  leftMotorRear->setSpeed(driveSpeed);
 
   rightMotorFront->run(FORWARD);
   rightMotorRear->run(FORWARD);
@@ -112,16 +112,17 @@ void backward (int dist) {
 
 void moveRobot(int dist) {
   // Reset the encoder count
+  int driveSpeed = 150;
   leftCount = 0;
   rightCount = 0;
   unsigned long ticks;
 
   ticks = dist * 229; //229 ticks per inch
   do {
-    rightMotorFront->setSpeed(150);
-    rightMotorRear->setSpeed(150);
-    leftMotorFront->setSpeed(150);
-    leftMotorRear->setSpeed(150);
+    rightMotorFront->setSpeed(driveSpeed);
+    rightMotorRear->setSpeed(driveSpeed);
+    leftMotorFront->setSpeed(driveSpeed);
+    leftMotorRear->setSpeed(driveSpeed);
   } while (((leftCount + rightCount) / 2) < ticks);
 }
 //
@@ -186,7 +187,7 @@ void right(int angle) {
     IMUangle = event.orientation.x;
 
     if (IMUangle >= (angle - (angle * .1))) {
-      speed = 80;
+      speed = 90;
       rightMotorFront->setSpeed(speed);
       rightMotorRear->setSpeed(speed);
       leftMotorFront->setSpeed(speed);
