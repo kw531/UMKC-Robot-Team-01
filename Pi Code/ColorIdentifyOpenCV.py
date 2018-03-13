@@ -4,6 +4,10 @@ from picamera import PiCamera
 import time
 import cv2
 import numpy as np
+
+def colorCount(erode):
+    cnt=sum(i>0 for i in erode)
+    return(cnt.any()>0)
  
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -29,41 +33,40 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     # define range of color in HSV
 
-    magenta_lower=[150,50,5] #good
+    magenta_lower=[150,50,5] #Good!
     magenta_upper=[177,255,255]
 
-    red_lower=[0,50,50] #good
+    red_lower=[0,50,50] #Good!
     red_upper=[12,255,255]
 
-    green_lower=[50,100,50] #ok
+    green_lower=[50,50,50] #Good!
     green_upper=[76,255,180]
 
-    yellow_lower=[26,50,50] #good
+    yellow_lower=[26,50,50] #Good!
     yellow_upper=[49,255,255]
 
-    cyan_lower=[77,207,202] #ok
-    cyan_upper=[99,255,255]
+    cyan_lower=[77,0,0] #Good!
+    cyan_upper=[105,255,255]
 
-    blue_lower=[110,0,0] #ok
+    blue_lower=[110,0,0] #Good!
     blue_upper=[130,255,255]
 
-    lower = np.array(red_lower)
-    upper = np.array(red_upper)
+    lower = np.array(magenta_lower)
+    upper = np.array(magenta_upper)
 
     # Threshold the HSV image to get only blue colors
     mask = cv2.inRange(hsv, lower, upper)
     kernel = np.ones((5,5), np.uint8)
-    erode= cv2.erode(mask, kernel, iterations=2)
+    erode= cv2.erode(mask, kernel, iterations=8)
 
     #-----HERE IS WHERE I WANT SOME LOGIC DAMMIT------
+    #This is working for one color, we need to have a variable and logic for all
+    # 6 colors.  I will work on this later -KW
+    found=colorCount(erode)
+    print(found)
         
 
-# Bitwise-AND mask and original image
-#    res = cv2.bitwise_and(frame,frame, mask= mask)
-
-#    cv2.imshow("frame",frame)
     cv2.imshow("erode",erode)
-#    cv2.imshow('res',res)
     rawCapture.truncate(0)
  
     k = cv2.waitKey(1) & 0xFF
@@ -71,4 +74,6 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         break
     
 cv2.destroyAllWindows()
+
+
     
