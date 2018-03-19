@@ -1,11 +1,6 @@
-#   colorIdentifyTest.py
-#   Reads data from the color sensor over I2C
-#   Color ratios are found and the correct color
-#   is printed to the screen along with the ratios
-
-import smbus
-import time
 import RPi.GPIO as GPIO
+import time
+import smbus
 
 def getColor():
   data = bus.read_i2c_block_data(0x29, 0)
@@ -53,6 +48,10 @@ def getColor():
 
   return foundColor
 
+def change(k):
+    p.ChangeDutyCycle(1)
+    time.sleep(k)
+    p.ChangeDutyCycle(0)
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -63,36 +62,32 @@ p = GPIO.PWM(12, 50)
 p.start(0)
 bus = smbus.SMBus(1)
 
+try:
+    # I2C address 0x29
+    # Register 0x12 has device ver. 
+    # Register addresses must be OR'ed with 0x80
+    bus.write_byte(0x29,0x80|0x12)
+    ver = bus.read_byte(0x29)
+    # version # should be 0x44
+    if ver == 0x44:
+     bus.write_byte(0x29, 0x80|0x00) # 0x00 = ENABLE register
+     bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
+     bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
+     while True:
+           color="blue"
+           print("starting")
+           colorFound=getColor()
+           if colorFound==color:
+               p.ChangeDutyCycle(0)  # turn towards 90 degree
+               time.sleep(5) # sleep 1 second
+           else:
+               print("hi")
+               change(.05)
+           time.sleep(.1)
+    else: 
+        print "Device not found\n"
 
-# I2C address 0x29
-# Register 0x12 has device ver. 
-# Register addresses must be OR'ed with 0x80
-bus.write_byte(0x29,0x80|0x12)
-ver = bus.read_byte(0x29)
-# version # should be 0x44
-if ver == 0x44:
- bus.write_byte(0x29, 0x80|0x00) # 0x00 = ENABLE register
- bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
- bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
-
-
- while True: #Runs FOREVER
-    #Reads in the data
-  color="green"
-  print("starting")
-
-  colorFound=getColor()
-  #print(colorFound)
-  if colorFound==color:
-      p.ChangeDutyCycle(0)  # turn towards 90 degree
-      time.sleep(5) # sleep 1 second
-  else:
-      print("hi")
-      p.ChangeDutyCycle(1)
-      time.sleep(float(50/360)) # sleep 1 second
-      p.ChangeDutyCycle(0)
-  #p.ChangeDutyCycle(12.5) # turn towards 180 degree
-
-else: 
- print "Device not found\n"
-
+except KeyboardInterrupt:
+    p.stop()
+    GPIO.cleanup()
+    exit

@@ -133,7 +133,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     findColors(hsv)
 
-    #cv2.imshow("erode",erode)
+        #cv2.imshow("erode",erode)
     rawCapture.truncate(0)
  
     k = cv2.waitKey(1) & 0xFF
