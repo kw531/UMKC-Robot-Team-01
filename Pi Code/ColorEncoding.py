@@ -21,10 +21,10 @@ def getColor():
   #print pB
 
     #Prints color to screen
-  if pR > .10 and pR <.2 and  pG>.3 and pG<.35 and pB>.39 and pB<.60:
+  if pR > .10 and pR <.25 and  pG>.3 and pG<.37 and pB>.39 and pB<.60:
       print "Blue\n"
       foundColor="blue"
-  elif pR > .10 and pR <.15 and  pG>.35 and pG<.40 and pB>.45 and pB<.55:
+  elif pR > .10 and pR <.20 and  pG>.35 and pG<.40 and pB>.40 and pB<.55:
       print "Cyan\n"
       foundColor="cyan"
   elif pR > .10 and pR <.32 and  pG>.38 and pG<.60 and pB>.25 and pB<.35:
@@ -34,12 +34,12 @@ def getColor():
       print "Yellow\n"
       foundColor="yellow"
   elif pR > .5 and pR <.6 and  pG>.1 and pG<.2 and pB>.20 and pB<.30:
-      print "Pink\n"
-      foundColor="pink"
+      print "Magenta\n"
+      foundColor="magenta"
   elif pR > .50 and pR <.80 and  pG>.10 and pG<.25 and pB>.10 and pB<.25:
       print "Red\n"
       foundColor="red"
-  elif pR > .25 and pR <.37 and  pG>.26 and pG<.37 and pB>.26 and pB<.37:
+  elif pR > .25 and pR <.4 and  pG>.26 and pG<.37 and pB>.26 and pB<.37:
       print "Gray\n"
       foundColor="gray"
   else:
@@ -74,7 +74,7 @@ try:
      bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
      bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
      while True:
-           color="blue"
+           color="gray"
            print("starting")
            colorFound=getColor()
            if colorFound==color:
@@ -83,7 +83,7 @@ try:
            else:
                print("hi")
                change(.05)
-           time.sleep(.1)
+           #time.sleep(.1)
     else: 
         print "Device not found\n"
 

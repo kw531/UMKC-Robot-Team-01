@@ -51,7 +51,7 @@ if ver == 0x44:
       print ("Pink\n")
   elif pR > .50 and pR <.80 and  pG>.10 and pG<.25 and pB>.10 and pB<.25:
       print ("Red\n")
-  elif pR > .25 and pR <.37 and  pG>.26 and pG<.37 and pB>.26 and pB<.37:
+  elif pR > .25 and pR <.39 and  pG>.26 and pG<.37 and pB>.26 and pB<.37:
       print ("Gray\n")
   else:
       print ("Dunno.\n")

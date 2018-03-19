@@ -21,9 +21,9 @@ def getColor():
   pR=float(red)/float(totalRGB)
   pG=float(green)/float(totalRGB)
   pB=float(blue)/float(totalRGB)
-  #print pR
-  #print pG
-  #print pB
+  print pR
+  print pG
+  print pB
 
     #Prints color to screen
   if pR > .10 and pR <.2 and  pG>.3 and pG<.35 and pB>.39 and pB<.60:
@@ -44,7 +44,7 @@ def getColor():
   elif pR > .50 and pR <.80 and  pG>.10 and pG<.25 and pB>.10 and pB<.25:
       print "Red\n"
       foundColor="red"
-  elif pR > .25 and pR <.37 and  pG>.26 and pG<.37 and pB>.26 and pB<.37:
+  elif pR > .25 and pR <.4 and  pG>.26 and pG<.37 and pB>.26 and pB<.37:
       print "Gray\n"
       foundColor="gray"
   else:
