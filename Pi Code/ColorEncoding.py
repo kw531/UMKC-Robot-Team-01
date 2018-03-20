@@ -3,6 +3,7 @@ import time
 import smbus
 
 def getColor():
+  bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
   data = bus.read_i2c_block_data(0x29, 0)
   clear = clear = data[1] << 8 | data[0]
   red = data[3] << 8 | data[2]
@@ -16,12 +17,9 @@ def getColor():
   pR=float(red)/float(totalRGB)
   pG=float(green)/float(totalRGB)
   pB=float(blue)/float(totalRGB)
-  #print pR
-  #print pG
-  #print pB
 
     #Prints color to screen
-  if pR > .10 and pR <.25 and  pG>.3 and pG<.37 and pB>.39 and pB<.60:
+  if pR > .10 and pR <.20 and  pG>.3 and pG<.35 and pB>.39 and pB<.60:
       print "Blue\n"
       foundColor="blue"
   elif pR > .10 and pR <.20 and  pG>.35 and pG<.40 and pB>.40 and pB<.55:
@@ -39,7 +37,7 @@ def getColor():
   elif pR > .50 and pR <.80 and  pG>.10 and pG<.25 and pB>.10 and pB<.25:
       print "Red\n"
       foundColor="red"
-  elif pR > .25 and pR <.4 and  pG>.26 and pG<.37 and pB>.26 and pB<.37:
+  elif pR > .3 and pR <.4 and  pG>.3 and pG<.37 and pB>.3 and pB<.37:
       print "Gray\n"
       foundColor="gray"
   else:
@@ -49,9 +47,11 @@ def getColor():
   return foundColor
 
 def change(k):
+    print("moving")
     p.ChangeDutyCycle(1)
     time.sleep(k)
     p.ChangeDutyCycle(0)
+    time.sleep(k)
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -69,21 +69,17 @@ try:
     bus.write_byte(0x29,0x80|0x12)
     ver = bus.read_byte(0x29)
     # version # should be 0x44
+    bus.write_byte(0x29, 0x80|0x00) # 0x00 = ENABLE register
+    bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
     if ver == 0x44:
-     bus.write_byte(0x29, 0x80|0x00) # 0x00 = ENABLE register
-     bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
-     bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
      while True:
-           color="gray"
-           print("starting")
-           colorFound=getColor()
-           if colorFound==color:
-               p.ChangeDutyCycle(0)  # turn towards 90 degree
-               time.sleep(5) # sleep 1 second
-           else:
-               print("hi")
-               change(.05)
-           #time.sleep(.1)
+       color="blue"
+       while getColor() != color:
+         print("polling")
+         change(.08)
+         time.sleep(.20)
+       print("found, waiting for next loop")
+       time.sleep(2)
     else: 
         print "Device not found\n"
 
