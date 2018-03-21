@@ -17,6 +17,7 @@ def getColor():
   pR=float(red)/float(totalRGB)
   pG=float(green)/float(totalRGB)
   pB=float(blue)/float(totalRGB)
+  print pR, pG, pB
 
     #Prints color to screen
   if pR > .10 and pR <.20 and  pG>.3 and pG<.35 and pB>.39 and pB<.60:
@@ -46,12 +47,21 @@ def getColor():
 
   return foundColor
 
-def change(k):
-    print("moving")
-    p.ChangeDutyCycle(1)
-    time.sleep(k)
-    p.ChangeDutyCycle(0)
-    time.sleep(k)
+def change(d,k):
+    print("----moving----")
+    if d=='counter':
+      p.ChangeDutyCycle(1) #on
+    if d=='clock':
+      p.ChangeDutyCycle(60)
+    time.sleep(k/2)
+    p.ChangeDutyCycle(0)#off
+    time.sleep(k/2)
+
+def moveToColor(color, spd):
+  if color == 'yellow' or color == 'cyan' or color == 'magenta' or color == 'gray':
+    change('counter', spd)
+  if color == 'red' or color == 'green' or color == 'blue':
+    change('clock', spd)
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -63,22 +73,28 @@ p.start(0)
 bus = smbus.SMBus(1)
 
 try:
-    # I2C address 0x29
-    # Register 0x12 has device ver. 
-    # Register addresses must be OR'ed with 0x80
+    # Color Sensor Setup
     bus.write_byte(0x29,0x80|0x12)
     ver = bus.read_byte(0x29)
-    # version # should be 0x44
     bus.write_byte(0x29, 0x80|0x00) # 0x00 = ENABLE register
     bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
+
     if ver == 0x44:
      while True:
-       color="blue"
-       while getColor() != color:
-         print("polling")
-         change(.08)
-         time.sleep(.20)
-       print("found, waiting for next loop")
+       color="green"
+       wheelColor=getColor()
+       while wheelColor != color:
+         print("-------polling-------")
+         time.sleep(.1)
+         if wheelColor=='Dunno.':
+           moveToColor(color, .02)
+         else:
+           moveToColor(color, .20) #move time
+         time.sleep(.2)
+         print("     ")
+         wheelColor=getColor()
+         print ("I found"), wheelColor
+       print("~~~~~~~~~~found!~~~~~~~~~~~~~~")
        time.sleep(2)
     else: 
         print "Device not found\n"
