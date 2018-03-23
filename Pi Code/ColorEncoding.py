@@ -1,6 +1,9 @@
 import RPi.GPIO as GPIO
 import time
 import smbus
+GPIO.setmode(GPIO.BOARD)
+
+
 
 def getColor():
   bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
@@ -63,11 +66,13 @@ def moveToColor(color, spd):
   if color == 'red' or color == 'green' or color == 'blue':
     change('clock', spd)
 
-GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(12, GPIO.OUT)
+GPIO.setup(18, GPIO.IN) # Go Button
+GPIO.setup(12, GPIO.OUT) # Servo 1
+GPIO.setup(40, GPIO.OUT) # Serial to Arduino
 
 p = GPIO.PWM(12, 50)
+
 
 p.start(0)
 bus = smbus.SMBus(1)
@@ -81,21 +86,25 @@ try:
 
     if ver == 0x44:
      while True:
-       color="green"
-       wheelColor=getColor()
-       while wheelColor != color:
-         print("-------polling-------")
-         time.sleep(.1)
-         if wheelColor=='Dunno.':
-           moveToColor(color, .02)
-         else:
-           moveToColor(color, .20) #move time
-         time.sleep(.2)
-         print("     ")
+       if GPIO.input(18):
+         GPIO.output(40, GPIO.HIGH)
+         color="green"
          wheelColor=getColor()
-         print ("I found"), wheelColor
-       print("~~~~~~~~~~found!~~~~~~~~~~~~~~")
-       time.sleep(2)
+         while wheelColor != color:
+           print("-------polling-------")
+           time.sleep(.1)
+           if wheelColor=='Dunno.':
+             moveToColor(color, .02)
+           else:
+             moveToColor(color, .20) #move time
+           time.sleep(.2)
+           print("     ")
+           wheelColor=getColor()
+           print ("I found"), wheelColor
+         print("~~~~~~~~~~found!~~~~~~~~~~~~~~")
+         time.sleep(2)
+       else:
+            GPIO.output(40, GPIO.LOW)
     else: 
         print "Device not found\n"
 
