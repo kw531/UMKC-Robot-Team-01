@@ -45,7 +45,7 @@ void driversSetup() {
   AFMSd.begin();  // create with the default frequency 1.6KHz
 
   // Set the speed to start, from 0 (off) to 255 (max speed)
-  int driveSpeed = 150;
+  int driveSpeed = 200;
   rightMotorFront->setSpeed(driveSpeed);
   rightMotorRear->setSpeed(driveSpeed);
   leftMotorFront->setSpeed(driveSpeed);
@@ -128,7 +128,7 @@ void moveRobot(int dist) {
 //
 void left(float angle) {
   // turning left = higher angle on IMU
-
+  IMUreset();
   float IMUangle = 0;
   int speed;
   rightMotorFront->run(BACKWARD);
@@ -143,12 +143,12 @@ void left(float angle) {
   Serial.print("\tLeft turn X: ");
   Serial.print(event.orientation.x, 2);
   Serial.println("");
-  while (IMUangle > 360.0 - angle || IMUangle < 2.0) {
+  while (IMUangle > 360.0 - angle || IMUangle < 3.0) {
     sensors_event_t event;
     bno.getEvent(&event);
     IMUangle = event.orientation.x;
 
-    if (IMUangle < 360.0 - (angle - (angle * .1))) {
+    if (IMUangle < 360.0 - (angle - (angle * .05))) {
       speed = 80;
       rightMotorFront->setSpeed(speed);
       rightMotorRear->setSpeed(speed);
@@ -163,13 +163,12 @@ void left(float angle) {
     }
   }
   cleanUp();
-  IMUreset();
 }
 
 
 void right(int angle) {
   // Turning right = smaller angle on IMU
-
+  IMUreset();
   int IMUangle = 0;
   int speed;
   rightMotorFront->run(FORWARD);
@@ -187,7 +186,7 @@ void right(int angle) {
     IMUangle = event.orientation.x;
 
     if (IMUangle >= (angle - (angle * .1))) {
-      speed = 90;
+      speed = 100;
       rightMotorFront->setSpeed(speed);
       rightMotorRear->setSpeed(speed);
       leftMotorFront->setSpeed(speed);
@@ -203,7 +202,6 @@ void right(int angle) {
     }
   }
   cleanUp();
-  IMUreset();
 }
 
 
@@ -217,7 +215,8 @@ void cleanUp() {
 void IMUreset() {
   // Resets the IMU so that the calibration is zero after a turn
   bno.begin();
-  delay(700);
+  delay(750);
 }
 
 #endif
+

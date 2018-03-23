@@ -3,34 +3,16 @@
 #include <avr/pgmspace.h>
 #include "motionFunctions.h"
 
-//    forward(30);
-//    right(90);
-//    forward(11);
-//    left(90);
-//    forward(24);
-//    left(90);
-//    forward(26);
-//    left(90);
-//    forward(24);
-//    right(45);
-//    //start next edge
-//    forward(14);
-//    right(135);
-//    forward(43);
-//    right(90);
-//    forward(43);
-//    right(90);
-//    forward(43);
 void performMovement(char c, int n);
 char round1PickupCode[] = {'f', // travel to box 1
                                                 'r', 'f', 'l', 'f', 'l', 'f', 'l', 'f', // box 1
                                                 'r', 'f', // travel to box 3
-                                                'r', 'b' ,'f', 'r', 'f', 'r', 'f'}; // box 3
+                                                'r' ,'f', 'r', 'f', 'r', 'f', 'l', 'f','r','f'}; // box 3
                                                 
 int round1Pickup[] = {30, // travel to box 1 
-                                            90, 11, 90, 24, 90, 26, 90, 24, // box 1
-                                            45, 14, // travel to box 3 
-                                            135, 5, 48, 90, 43, 90, 45};  // box 3
+                                            90, 11, 90, 24, 93, 24, 90, 25, // box 1
+                                            45, 17, // travel to box 3 
+                                            127, 48, 85, 48, 85, 46 ,45, 25, 135, 45};  // box 3
 
 void roundOne() {
   Serial.println(sizeof(round1PickupCode)); Serial.println("");
@@ -68,3 +50,4 @@ void performMovement(char c, int n) {
 }
 
 #endif
+
