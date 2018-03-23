@@ -11,12 +11,14 @@ void setup() {
 void loop() {
 
   if (digitalRead(goPin) == HIGH) {
-    runConveyor();
+    //runConveyor();
     delay(2000);
+    Serial.print("hi");
     roundOne();
-    delay(5000);
+    delay(10000);
   }
 }
+
 
 
 

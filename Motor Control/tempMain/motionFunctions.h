@@ -150,13 +150,13 @@ void left(float angle) {
 
     if (IMUangle < 360.0 - (angle - (angle * .05))) {
       speed = 80;
-      rightMotorFront->setSpeed(speed);
+      rightMotorFront->setSpeed(100);
       rightMotorRear->setSpeed(speed);
       leftMotorFront->setSpeed(speed);
       leftMotorRear->setSpeed(speed);
     } else {
       speed = 150;
-      rightMotorFront->setSpeed(speed);
+      rightMotorFront->setSpeed(170);
       rightMotorRear->setSpeed(speed);
       leftMotorFront->setSpeed(speed);
       leftMotorRear->setSpeed(speed);
@@ -219,4 +219,5 @@ void IMUreset() {
 }
 
 #endif
+
 
