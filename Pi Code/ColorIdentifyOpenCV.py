@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 
 def colorFound(code):
+# Takes in a "binary" code and returns a color code
     print(code)
     print("")
     return{
@@ -18,6 +19,7 @@ def colorFound(code):
         }.get(code, 'none')
 
 def moveServo(color):
+# Takes in a color code, this is were servo motion will come into play
     if color == 'r':
         print('red!!')
     elif color == 'b':
@@ -37,6 +39,10 @@ def moveServo(color):
     return 1
 
 def binColors(R,B,G,M,Y,C):
+# creates a "binary" code for the colors
+# Takes in a color code that has been assigned True or False
+# If true then that color gets assigned a 1
+# If false that color is assigned a 0
     print("Bin Colors")
     print(R)
     print(B)
@@ -61,19 +67,23 @@ def binColors(R,B,G,M,Y,C):
     print(d6)
     print("")
 
-    return(str(d1)+str(d2)+str(d3)+str(d4)+str(d5)+str(d6))
+    return(str(d1)+str(d2)+str(d3)+str(d4)+str(d5)+str(d6)) 
 
 def colorCount(erode):
+# returns T or F if that color is present in the camera capture
     cnt=sum(i>0 for i in erode)
     return(cnt.any()>0)
 
 def erodeHSV(hsv, low, up):
+# This creates a mask and then erodes the camera capture down to a specific color
+# 8 iterations on the erode remove excess noise
     mask = cv2.inRange(hsv, np.array(low), np.array(up))
     kernel = np.ones((5,5), np.uint8)
     return(cv2.erode(mask, kernel, iterations=8))
 
 def findColors(hsv):
-    # define range of color in HSV
+# The upper and lower HSV values for each color
+# Sends the camera capture off to be eroded
 
     magenta_lower=[150,50,5] #Good!
     magenta_upper=[177,255,255]
@@ -93,6 +103,7 @@ def findColors(hsv):
     blue_lower=[110,0,0] #Good!
     blue_upper=[130,255,255]
 
+    # Gets a matrix of only that specific color
     r=colorCount(erodeHSV(hsv,red_lower,red_upper))
     b=colorCount(erodeHSV(hsv,blue_lower,blue_upper))
     g=colorCount(erodeHSV(hsv,green_lower,green_upper))
@@ -109,9 +120,12 @@ def findColors(hsv):
     print(y)
     print(c)
     print("")
+    
+   # This takes the color matrices, turns the into a binary string
+   # then tells the moveServo which color to turn to
     moveServo(colorFound(binColors(r,b,g,m,y,c)))
     
-    
+#----------------------------------------MAIN-----------------------------------------------------    
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
@@ -131,9 +145,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     blur = cv2.blur(image, (3,3))
     hsv = cv2.cvtColor(blur,cv2.COLOR_BGR2HSV)
 
-    findColors(hsv)
-
-        #cv2.imshow("erode",erode)
+    findColors(hsv) # Takes the camera capture and moves the servo
+	
     rawCapture.truncate(0)
  
     k = cv2.waitKey(1) & 0xFF
