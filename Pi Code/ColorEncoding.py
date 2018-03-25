@@ -3,9 +3,8 @@ import time
 import smbus
 GPIO.setmode(GPIO.BOARD)
 
-
-
 def getColor():
+  # Gets a color from the color sensor on the color encoder for the dispenser
   bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
   data = bus.read_i2c_block_data(0x29, 0)
   clear = clear = data[1] << 8 | data[0]
@@ -51,16 +50,21 @@ def getColor():
   return foundColor
 
 def change(d,k):
+  # Changes the direction of the servo basked on the target color
+  
     print("----moving----")
     if d=='counter':
+      # Move counter clockwise
       p.ChangeDutyCycle(1) #on
     if d=='clock':
+      # Move clockwise
       p.ChangeDutyCycle(60)
     time.sleep(k/2)
     p.ChangeDutyCycle(0)#off
     time.sleep(k/2)
 
 def moveToColor(color, spd):
+  # Changes the direction of the servo based on the target color
   if color == 'yellow' or color == 'cyan' or color == 'magenta' or color == 'gray':
     change('counter', spd)
   if color == 'red' or color == 'green' or color == 'blue':
@@ -72,9 +76,8 @@ GPIO.setup(12, GPIO.OUT) # Servo 1
 GPIO.setup(40, GPIO.OUT) # Serial to Arduino
 
 p = GPIO.PWM(12, 50)
+p.start(0) # Start the servo at 0, (no predefined angles?)
 
-
-p.start(0)
 bus = smbus.SMBus(1)
 
 try:
@@ -87,28 +90,30 @@ try:
     if ver == 0x44:
      while True:
        if GPIO.input(18):
-         GPIO.output(40, GPIO.HIGH)
-         color="green"
-         wheelColor=getColor()
+         GPIO.output(40, GPIO.HIGH) # This doesn't work, fix, maybe use interrupts
+         color="green" # This is where a color from the pi camera comes in
+        
+        wheelColor=getColor() # Get the encoder current position
          while wheelColor != color:
            print("-------polling-------")
            time.sleep(.1)
            if wheelColor=='Dunno.':
+             # Color Sensor got a bad value, pluse it until it gets a proper value
              moveToColor(color, .02)
            else:
-             moveToColor(color, .20) #move time
+             moveToColor(color, .20) # move time
            time.sleep(.2)
            print("     ")
-           wheelColor=getColor()
+           wheelColor=getColor() # Get new color
            print ("I found"), wheelColor
          print("~~~~~~~~~~found!~~~~~~~~~~~~~~")
          time.sleep(2)
        else:
-            GPIO.output(40, GPIO.LOW)
+            GPIO.output(40, GPIO.LOW) # bad, fix
     else: 
         print "Device not found\n"
 
-except KeyboardInterrupt:
+except KeyboardInterrupt: # Control C is life
     p.stop()
     GPIO.cleanup()
     exit
