@@ -6,33 +6,43 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(12, GPIO.OUT)
 
 p = GPIO.PWM(12, 50)
-print ('start')
+
 p.start(0)
-print('next')
 
-a=2.5
-print a
-p.ChangeDutyCycle(a) # Open hatch
-time.sleep(3)
+try:
+        while True:
+            print("black")
+            p.ChangeDutyCycle(9.1)  # turn towards 90 degree
+            time.sleep(5) # sleep 1 second
 
-b=7
-print b
-p.ChangeDutyCycle(b)
-time.sleep(3)
+            print("yellow")
+            p.ChangeDutyCycle(10.05)  # turn towards 0 degree
+            time.sleep(5) # sleep 1 second
 
-c=10.5
-print c
-p.ChangeDutyCycle(c)
-time.sleep(3)
+            print("black")
+            p.ChangeDutyCycle(9.1)  # turn towards 90 degree
+            time.sleep(5) # sleep 1 second
 
-##
-##d=7.5
-##print d
-##p.ChangeDutyCycle(d)
-##time.sleep(3)
+            print("cyan")
+            p.ChangeDutyCycle(9.94)  # turn towards 0 degree
+            time.sleep(5) # sleep 1 second
 
+            print("black")
+            p.ChangeDutyCycle(9.1)  # turn towards 90 degree
+            time.sleep(5) # sleep 1 second
+            
+            #p.ChangeDutyCycle(12.5) # turn towards 180 degree
+            #time.sleep(1) # sleep 1 second 
+except KeyboardInterrupt:
+    p.stop()
+    GPIO.cleanup()
 
-#360/2=180/7=25.7
+#9.94 cyan
+#9.75 magenta
+#9.2 red
+#9.1 Black
+#9.4 Green
+#9.5 Blue
+#10.05 Yellow
 
-p.stop()
-GPIO.cleanup()
+    
