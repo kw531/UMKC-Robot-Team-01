@@ -19,18 +19,23 @@ try:
             p.ChangeDutyCycle(10.05)  # turn towards 0 degree
             time.sleep(5) # sleep 1 second
 
-            print("black")
-            p.ChangeDutyCycle(9.1)  # turn towards 90 degree
+            print("red")
+            p.ChangeDutyCycle(9.2)  # turn towards 90 degree
             time.sleep(5) # sleep 1 second
 
             print("cyan")
             p.ChangeDutyCycle(9.94)  # turn towards 0 degree
             time.sleep(5) # sleep 1 second
 
-            print("black")
+            print("green")
             p.ChangeDutyCycle(9.1)  # turn towards 90 degree
             time.sleep(5) # sleep 1 second
-            
+            print("mag")
+            p.ChangeDutyCycle(9.75)  # turn towards 90 degree
+            time.sleep(5) # sleep 1 second
+            print("blue")
+            p.ChangeDutyCycle(9.5)  # turn towards 90 degree
+            time.sleep(5) # sleep 1 second
             #p.ChangeDutyCycle(12.5) # turn towards 180 degree
             #time.sleep(1) # sleep 1 second 
 except KeyboardInterrupt:
