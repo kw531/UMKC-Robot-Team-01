@@ -31,7 +31,7 @@ void IMUSetup() {
 void conveyorSetup() {
 
   AFMSc.begin();  // Motorsheild setup for the conveyor
-  
+
   cnvyr1->setSpeed(255);
   cnvyr1->run(FORWARD);
   cnvyr1->run(RELEASE);
@@ -83,8 +83,18 @@ void motionSetup() {
 
 void runConveyor() {
   // Turn on the Conveyor
-  int speed = 255 // Cannot be lower than this or conveyor doesn't move
-  cnvyr1->run(FORWARD);
+  int speed = 255; // Cannot be lower than this or conveyor doesn't move
+  cnvyr1->run(BACKWARD);
+  cnvyr2->run(BACKWARD);
+
+  cnvyr1->setSpeed(speed);
+  cnvyr2->setSpeed(speed);
+}
+
+void stopConveyor(){
+    // Turn off the Conveyor
+  int speed = 0; // Cannot be lower than this or conveyor doesn't move
+  cnvyr1->run(BACKWARD);
   cnvyr2->run(BACKWARD);
 
   cnvyr1->setSpeed(speed);
@@ -118,7 +128,7 @@ void backward (int dist) {
 void moveRobot(int dist) {
   // Move the robot in inches
   int driveSpeed = 150;
-  
+
   leftCount = 0; // Reset the encoder counts
   rightCount = 0;
   unsigned long ticks;
@@ -131,11 +141,11 @@ void moveRobot(int dist) {
     leftMotorRear->setSpeed(driveSpeed);
   } while (((leftCount + rightCount) / 2) < ticks); // Average the encoder count
 }
-//
+
 void left(float angle) {
   // Turns the robot left to an angle of degrees.
   // turning left = higher angle on IMU
-  
+
   IMUreset(); // Zero the IMU before turning
   float IMUangle = 0;
   int speed;
@@ -151,7 +161,7 @@ void left(float angle) {
   Serial.print("\tLeft turn X: "); // Issue tracking printout
   Serial.print(event.orientation.x, 2);
   Serial.println("");
-  
+
   while (IMUangle > 360.0 - angle || IMUangle < 3.0) {
     //sensors_event_t event;
     bno.getEvent(&event);
@@ -175,14 +185,13 @@ void left(float angle) {
   cleanUp();
 }
 
-
 void right(float angle) {
   // Turns the robot right to a specific angle
   // Turning right = smaller angle on IMU
   IMUreset(); // Zero the IMU
   int IMUangle = 0;
   int speed;
-  
+
   rightMotorFront->run(FORWARD);
   rightMotorRear->run(FORWARD);
   leftMotorFront->run(BACKWARD);
@@ -217,6 +226,12 @@ void right(float angle) {
   cleanUp();
 }
 
+void still(int sec) {
+  cleanUp(); //Make sure motors are not running
+  sec = sec * 1000; //delay works in mili
+  delay(sec);
+}
+
 
 void cleanUp() {
   // RELEASE THE MOTORS
@@ -226,7 +241,7 @@ void cleanUp() {
   leftMotorRear->run(RELEASE);
 }
 
-void conveyorCleanUp(){
+void conveyorCleanUp() {
   // Not used currently, but preparation for turning off the conveyor when we don't need it.
   cnvyr1->run(RELEASE);
   cnvyr2->run(RELEASE);
@@ -239,5 +254,8 @@ void IMUreset() {
 }
 
 #endif
+
+
+
 
 

@@ -10,14 +10,19 @@ void setup() {
 
 void loop() {
 
-  if (digitalRead(goPin) == HIGH) {
-    //runConveyor();
-    delay(2000);
-    Serial.print("hi");
-    roundOne();
-    delay(10000);
-  }
+  //if (digitalRead(goPin) == HIGH) {
+  runConveyor();
+  delay(2000);
+  roundOne();
+  delay(5000);
+  stopConveyor();
+  dispense();
+  delay(10000);
+  //}
 }
+
+
+
 
 
 

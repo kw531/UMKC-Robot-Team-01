@@ -41,6 +41,7 @@ void motionSetup();
 // Conveyors
 void conveyorSetup();
 void runConveyor();
+void stopConveyor();
 
 // Drivers
 void driversSetup();
@@ -49,6 +50,7 @@ void forward (int dist);
 void backward (int dist);
 void left(float angle);
 void right(int angle);
+void still(int sec);
 void cleanUp();
 
 // IMU
@@ -62,5 +64,8 @@ void rightEncoderEvent();
 void setupMotion();
 
 #endif
+
+
+
 
 
