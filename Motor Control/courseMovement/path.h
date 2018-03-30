@@ -6,7 +6,7 @@
 void performMovement(char c, int n);
 
 // Each round has 2 variables.  round_PickupCode is the type of movement the robot needs to preform.
-// This can be forward ('f'), backwards ('b'), left ('l'), and right ('r')
+// This can be forward ('f'), backwards ('b'), left ('l'), right ('r'), still ('s'), dispense ('d')
 // round_Pickup is the distance or angle for the robot move.  If it is a distance to move forward or backwards,
 // the value is expressed in inches. If it's a turning angle, it's degrees.
 
@@ -19,10 +19,10 @@ char round1PickupCode[] = {'f', // travel to box 1
 int round1Pickup[] = {30, // travel to box 1
                       90, 9, 93, 25, 93, 26, 90, 25, // box 1
                       45, 17, // travel to box 3
-                      127, 48, 85, 48, 85, 46 , // box 3
+                      125, 48, 85, 48, 85, 46 , // box 3
                      };
 
-char dispenseCode[] = {'l'};
+char dispenseCode[] = {'d'};
 int dispenseNum[] = {30};
 
 void roundOne() {
@@ -62,6 +62,9 @@ void performMovement(char c, int n) {
       break;
     case 's':
       still(n);
+      break;
+    case 'd':
+      dispense(n);
       break;
     default:
       Serial.println("badnews");

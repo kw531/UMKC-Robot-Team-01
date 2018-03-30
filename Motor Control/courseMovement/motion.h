@@ -8,6 +8,11 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
+// Global Pins
+int goPin = 37;
+int modePin=50; // Low = Collect, High = Dispense
+int dispensePin=52; //Pin will go from low->high to tell raspberry to dispense a coin
+
 // IMU
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
@@ -51,6 +56,7 @@ void backward (int dist);
 void left(float angle);
 void right(int angle);
 void still(int sec);
+void dispense(int t);
 void cleanUp();
 
 // IMU
@@ -64,8 +70,3 @@ void rightEncoderEvent();
 void setupMotion();
 
 #endif
-
-
-
-
-
