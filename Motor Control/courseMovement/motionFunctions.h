@@ -235,7 +235,7 @@ void still(int sec) {
 void dispense(int t){
   digitalWrite(dispensePin, HIGH);
   Serial.print("dispense!");
-  delay(5000); // Wait 5 seconds
+  delay(3000); // Wait 5 seconds
   digitalWrite(dispensePin, LOW);
 }
 

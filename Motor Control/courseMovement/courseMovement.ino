@@ -13,17 +13,17 @@ void setup() {
 
 void loop() {
 
-  if (digitalRead(goPin) == HIGH) {
-    Serial.print("I made it!");
+ // if (digitalRead(goPin) == HIGH) {
+    //Serial.print("I made it!");
     //runConveyor();
-    //delay(2000);
-    //roundOne();
+    delay(3000);
+    roundOne();
     //delay(5000);
     //stopConveyor();
-    digitalWrite(modePin, HIGH); // Tell the Pi to be thinking about dispensing
+    //digitalWrite(modePin, HIGH); // Tell the Pi to be thinking about dispensing
     dispense();
-    delay(1000);
-  }
+    delay(10000);
+  //}
 }
 
 

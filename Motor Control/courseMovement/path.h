@@ -14,16 +14,30 @@ char round1PickupCode[] = {'f', // travel to box 1
                            'r', 'f', 'l', 'f', 'l', 'f', 'l', 'f', // box 1
                            'r', 'f', // travel to box 3
                            'r' , 'f', 'r', 'f', 'r', 'f', // box 3
-                          };
+                          'l', 'f'};
 
 int round1Pickup[] = {30, // travel to box 1
-                      90, 9, 93, 25, 93, 26, 90, 25, // box 1
-                      45, 17, // travel to box 3
+                      90, 10, 93, 24, 93, 24, 90, 25, // box 1
+                      43, 17, // travel to box 3
                       125, 48, 85, 48, 85, 46 , // box 3
-                     };
+                     45, 24};
 
-char dispenseCode[] = {'d'};
-int dispenseNum[] = {30};
+char dispenseCode[] = {'d', //red
+                        'r','b','d', //green
+                        'b','l','d', //blue
+                        'b','d',  //gray
+                        'b','r','d', // cyan
+                        'b','d', //mag
+                        'b','r','f','d', //yellow
+                        'b'}; //white
+int dispenseNum[] = {1, //red
+                    45,42,1, //g
+                    35,133,1, //b
+                    56,1, //gray
+                    53,135,1, //cyan
+                    40,1, //mag
+                    35,90,2,1, //yellow
+                    34}; //white
 
 void roundOne() {
   Serial.println(sizeof(round1PickupCode)); Serial.println("");
