@@ -12,18 +12,17 @@ GPIO.setup(12, GPIO.OUT) # Main Servo
 GPIO.setup(16, GPIO.OUT) # Bottom Servo
 GPIO.setup(15, GPIO.IN) # Dispense Signal from Arduino (High = Turn on bottom servo)
 GPIO.setup(13, GPIO.IN) # Mode signal (Low = Collect High = Dispense)
+GPIO.setup(40, GPIO.OUT) # Output to Arduino to Go
 
 p = GPIO.PWM(12, 50) # Main Servo Setup
 p.start(0)
 b = GPIO.PWM(16, 50) # Bottom Servo Setup
 b.start(7.5)
 
-dispense = 0
+dispense = 0 # For tracking what has been dispensed or not
 
 def colorFound(code):
 # Takes in a "binary" code and returns a color code
-    print(code)
-    print("")
     return{
         '100000':'r',
         '010000':'b',
@@ -81,29 +80,13 @@ def binColors(R,B,G,M,Y,C):
 # Takes in a color code that has been assigned True or False
 # If true then that color gets assigned a 1
 # If false that color is assigned a 0
-    print("Bin Colors")
-    print(R)
-    print(B)
-    print(G)
-    print(M)
-    print(Y)
-    print(C)
-    print("")
+
     d1=(1 if R==True else 0)
     d2=(1 if B==True else 0)
     d3=(1 if G==True else 0)
     d4=(1 if M==True else 0)
     d5=(1 if Y==True else 0)
     d6=(1 if C==True else 0)
-
-    print("d values")
-    print(d1)
-    print(d2)
-    print(d3)
-    print(d4)
-    print(d5)
-    print(d6)
-    print("")
 
     return(str(d1)+str(d2)+str(d3)+str(d4)+str(d5)+str(d6)) 
 
@@ -148,16 +131,6 @@ def findColors(hsv):
     m=colorCount(erodeHSV(hsv,magenta_lower,magenta_upper))
     y=colorCount(erodeHSV(hsv,yellow_lower,yellow_upper))
     c=colorCount(erodeHSV(hsv,cyan_lower,cyan_upper))
-
-    print("")
-    print("sending Values")
-    print(r)
-    print(b)
-    print(g)
-    print(m)
-    print(y)
-    print(c)
-    print("")
     
    # This takes the color matrices, turns the into a binary string
    # then tells the moveServo which color to turn to
@@ -165,7 +138,7 @@ def findColors(hsv):
     
 def dispenseCoin():
 # Move the coins to the slot, then dispense
-
+    print ("dispenseCoin()")
 #Dispensing Colors
 #Black - 10.0
 #Yellow - 9.85
@@ -176,18 +149,25 @@ def dispenseCoin():
 #Blue - 9.4
 
     if dispense == 0: #red
+        print("red dispense")
         pos=9.1
     elif dispense == 1: #green
+        print("green dispense")
         pos=9.25
     elif dispense == 2: #blue
+        print("blue dispense")
         pos=9.4
     elif dispense == 3: #gray/black
+        print("black dispense")
         pos=10
     elif dispense == 4: #cyan
+        print("cyan dispense")
         pos=9.7
     elif dispense == 5: #magenta
+        print("mag dispense")
         pos=9.57
     elif dispense == 6: #yellow
+        print("yellow+ dispense")
         pos=9.85
     else:
         pos=10
@@ -213,32 +193,34 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
  
 # allow the camera to warmup
 time.sleep(0.1)
-
+GPIO.output(40, GPIO.LOW)
 try:
     while True:
-        if(GPIO.input(13)==GPIO.LOW): #Collect Mode
-            for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-                    # capture frames from the camera
-                    # grab the raw NumPy array representing the image
+        for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+            if(GPIO.input(13)==GPIO.LOW): #Collect Mode
+                # capture frames from the camera
+                # grab the raw NumPy array representing the image
                 image = frame.array
                 blur = cv2.blur(image, (3,3))
                 hsv = cv2.cvtColor(blur,cv2.COLOR_BGR2HSV)
-                if(GPIO.input(18)==GPIO.HIGH):
+                if(GPIO.input(18)==GPIO.HIGH): #Go Button is pushed
+                    GPIO.output(40, GPIO.HIGH) #Tell Arduino to start moving
                     findColors(hsv) # Takes the camera capture and moves the servo
                 else:
                     print "nope"
-                rawCapture.truncate(0)
-            cv2.destroyAllWindows()
-        else: #GPIO 13 is HIGH - Dispense Mode
-            if(GPIO.input(15) == GPIO.HIGH): # We have stopped on a color
-                dispenseCoin()
-                time.sleep(1)
-                dispense=dispense+1 #go to next color
-            time.sleep(.1) #hang out here for a milisecond
-            
+            else: #GPIO 13 is HIGH - Dispense Mode
+                print("Dispense~")
+                if(GPIO.input(15) == GPIO.HIGH): # We have stopped on a color
+                    dispenseCoin()
+                    time.sleep(1)
+                    dispense=dispense+1 #go to next color
+                time.sleep(.1) #hang out here for a milisecond
+            rawCapture.truncate(0)
 
 except KeyboardInterrupt:
     p.stop()
+    b.stop()
+    GPIO.output(40, GPIO.LOW)
     GPIO.cleanup()
 
 

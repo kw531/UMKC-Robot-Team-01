@@ -7,17 +7,13 @@ GPIO.setup(16, GPIO.OUT)
 
 p = GPIO.PWM(16, 50)
 
-p.start(7.5)
+p.start(0)
 
 try:
         while True:
             print("open")
-            p.ChangeDutyCycle(7.5)  # turn towards 90 degree
+            p.ChangeDutyCycle(a)  # turn towards 90 degree
             time.sleep(1) # sleep 1 second
-            print("close")
-            p.ChangeDutyCycle(10.5)
-            time.sleep(5)
-                
 
 ##            print("yellow")
 ##            p.ChangeDutyCycle(9.33)  # turn towards 0 degree
