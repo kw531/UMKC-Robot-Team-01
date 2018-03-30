@@ -3,51 +3,64 @@ import time
 
 GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(12, GPIO.OUT)
+GPIO.setup(16, GPIO.OUT)
 
-p = GPIO.PWM(12, 50)
+p = GPIO.PWM(16, 50)
 
-p.start(0)
+p.start(7.5)
 
 try:
         while True:
-            print("black")
-            p.ChangeDutyCycle(9.1)  # turn towards 90 degree
-            time.sleep(5) # sleep 1 second
+            print("open")
+            p.ChangeDutyCycle(7.5)  # turn towards 90 degree
+            time.sleep(1) # sleep 1 second
+            print("close")
+            p.ChangeDutyCycle(10.5)
+            time.sleep(5)
+                
 
-            print("yellow")
-            p.ChangeDutyCycle(10.05)  # turn towards 0 degree
-            time.sleep(5) # sleep 1 second
-
-            print("red")
-            p.ChangeDutyCycle(9.2)  # turn towards 90 degree
-            time.sleep(5) # sleep 1 second
-
-            print("cyan")
-            p.ChangeDutyCycle(9.94)  # turn towards 0 degree
-            time.sleep(5) # sleep 1 second
-
-            print("green")
-            p.ChangeDutyCycle(9.1)  # turn towards 90 degree
-            time.sleep(5) # sleep 1 second
-            print("mag")
-            p.ChangeDutyCycle(9.75)  # turn towards 90 degree
-            time.sleep(5) # sleep 1 second
-            print("blue")
-            p.ChangeDutyCycle(9.5)  # turn towards 90 degree
-            time.sleep(5) # sleep 1 second
+##            print("yellow")
+##            p.ChangeDutyCycle(9.33)  # turn towards 0 degree
+##            time.sleep(5) # sleep 1 second
+##
+##            print("red")
+##            p.ChangeDutyCycle(9.7)  # turn towards 90 degree
+##            time.sleep(5) # sleep 1 second
+##
+##            print("cyan")
+##            p.ChangeDutyCycle(9.20)  # turn towards 0 degree
+##            time.sleep(5) # sleep 1 second
+##
+##            print("green")
+##            p.ChangeDutyCycle(9.82)  # turn towards 90 degree
+##            time.sleep(5) # sleep 1 second
+##            print("mag")
+##            p.ChangeDutyCycle(9.0)  # turn towards 90 degree
+##            time.sleep(5) # sleep 1 second
+##            print("blue")
+##            p.ChangeDutyCycle(9.95)  # turn towards 90 degree
+##            time.sleep(5) # sleep 1 second
+            
             #p.ChangeDutyCycle(12.5) # turn towards 180 degree
             #time.sleep(1) # sleep 1 second 
 except KeyboardInterrupt:
     p.stop()
     GPIO.cleanup()
 
-#9.94 cyan
-#9.75 magenta
-#9.2 red
-#9.1 Black
-#9.4 Green
-#9.5 Blue
-#10.05 Yellow
+#Collection Colors
+#Black - 9.5
+#Yellow - 9.33
+#Cyan - 9.23
+#Magenta - 9.0
+#Red - 9.7
+#Green - 9.8
+#Blue - 9.94
 
-    
+#Dispensing Colors
+#Black - 10.0
+#Yellow - 9.85
+#Cyan - 9.70
+#Magenta - 9.57
+#Red - 9.10
+#Green - 9.25
+#Blue - 9.4
