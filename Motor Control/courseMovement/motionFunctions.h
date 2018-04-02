@@ -232,6 +232,13 @@ void still(int sec) {
   delay(sec);
 }
 
+void dispense(int t){
+  digitalWrite(dispensePin, HIGH);
+  Serial.print("dispense!");
+  delay(3000); // Wait 5 seconds
+  digitalWrite(dispensePin, LOW);
+}
+
 
 void cleanUp() {
   // RELEASE THE MOTORS
