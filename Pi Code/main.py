@@ -22,6 +22,7 @@ b.start(7.5)
 dispense = 0 # For tracking what has been dispensed or not
 
 def colorFound(code):
+    print code
 # Takes in a "binary" code and returns a color code
     return{
         '100000':'r',
@@ -34,27 +35,27 @@ def colorFound(code):
 
 def moveServo(color):
 # Takes in a color code, this is were servo motion will come into play
-
+#used from reset point of 7.5 duty cycle
 #Collection Colors
-#Black - 9.5
-#Yellow - 9.33
-#Cyan - 9.23
-#Magenta - 9.0
-#Red - 9.7
-#Green - 9.8
-#Blue - 9.94
+#Black - 9.55
+#Yellow - 9.33 g
+#Cyan - 9.23  g
+#Magenta - 9.08 g
+#Red - 9.75 g
+#Green - 9.8 g
+#Blue - 9.2 g
 
     if color == 'r':
-        position=9.7
+        position=9.75
         print('red!!')
     elif color == 'b':
-        position=9.94
+        position=9.2
         print('blue!!')
     elif color == 'g':
         position=9.80
         print('green!!')
     elif color == 'm':
-        position=9.0
+        position=9.08
         print('magenta!!')
     elif color == 'y':
         position=9.33
@@ -63,12 +64,12 @@ def moveServo(color):
         position=9.23
         print('cyan!!')
     else:
-        position=9.50
-        print('none!!')
+        position=9.55
+        print('none or black!!')
 
     servoOp(position) #Move to color
-    time.sleep(5) #wait 5 seconds
-    servoOp(9.50) #return to black
+    time.sleep(1) #wait 5 seconds
+    #servoOp(9.50) #return to black
     return 1
 
 def servoOp(position):
@@ -118,10 +119,10 @@ def findColors(hsv):
     yellow_lower=[26,50,50] #Good!
     yellow_upper=[49,255,255]
 
-    cyan_lower=[77,0,0] #Good!
+    cyan_lower=[77,50,50] #Good!
     cyan_upper=[105,255,255]
 
-    blue_lower=[110,0,0] #Good!
+    blue_lower=[110,25,25] #Good!
     blue_upper=[130,255,255]
 
     # Gets a matrix of only that specific color
