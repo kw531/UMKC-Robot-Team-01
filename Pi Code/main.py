@@ -64,12 +64,12 @@ def moveServo(color):
         position=9.23
         print('cyan!!')
     else:
-        position=9.55
+        position=7.55
         print('none or black!!')
 
     servoOp(position) #Move to color
-    time.sleep(1) #wait 5 seconds
-    #servoOp(9.50) #return to black
+    time.sleep(4) #wait 5 seconds
+    servoOp(7.55) #return to black
     return 1
 
 def servoOp(position):
@@ -123,7 +123,7 @@ def findColors(hsv):
     cyan_upper=[105,255,255]
 
     blue_lower=[110,25,25] #Good!
-    blue_upper=[130,255,255]
+    blue_upper=[140,255,255]
 
     # Gets a matrix of only that specific color
     r=colorCount(erodeHSV(hsv,red_lower,red_upper))
@@ -137,6 +137,7 @@ def findColors(hsv):
    # then tells the moveServo which color to turn to
     moveServo(colorFound(binColors(r,b,g,m,y,c)))
     
+
 def dispenseCoin():
 # Move the coins to the slot, then dispense
     print ("dispenseCoin()")
@@ -151,32 +152,36 @@ def dispenseCoin():
 
     if dispense == 0: #red
         print("red dispense")
-        pos=9.1
+        pos=9.67
     elif dispense == 1: #green
         print("green dispense")
-        pos=9.25
+        pos=9.82
     elif dispense == 2: #blue
         print("blue dispense")
-        pos=9.4
+        pos=10.1
     elif dispense == 3: #gray/black
         print("black dispense")
-        pos=10
+        pos=9.55
     elif dispense == 4: #cyan
         print("cyan dispense")
-        pos=9.7
+        pos=9.25
     elif dispense == 5: #magenta
         print("mag dispense")
-        pos=9.57
+        pos=9.1
     elif dispense == 6: #yellow
-        print("yellow+ dispense")
-        pos=9.85
+        print("yellow dispense")
+        pos=9.4
     else:
-        pos=10
+        pos=7.55
 
     servoOp(pos) # Position the coins
-    time.sleep(5)
+    time.sleep(2)
     moveBottomServo() #dispense the coins
-        
+    time.sleep(2)
+    print "ET GO HOME"
+    servoOp(7.55)
+    time.sleep(3)
+    
 def moveBottomServo():
     b.ChangeDutyCycle(7.5)  # Open
     time.sleep(2)

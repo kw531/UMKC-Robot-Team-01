@@ -51,7 +51,7 @@ def binColors(R,B,G,M,Y,C):
 # Takes in a color code that has been assigned True or False
 # If true then that color gets assigned a 1
 # If false that color is assigned a 0
-    print("Bin Colors")
+    print("Bin Colors RGBMYC")
     print(R)
     print(B)
     print(G)
@@ -67,12 +67,12 @@ def binColors(R,B,G,M,Y,C):
     d6=(1 if C==True else 0)
 
     print("d values")
-    print(d1)
-    print(d2)
-    print(d3)
-    print(d4)
-    print(d5)
-    print(d6)
+    print('r', d1)
+    print('b',d2)
+    print('g',d3)
+    print('m',d4)
+    print('y',d5)
+    print('c',d6)
     print("")
 
     return(str(d1)+str(d2)+str(d3)+str(d4)+str(d5)+str(d6)) 
@@ -105,7 +105,7 @@ def findColors(hsv):
     yellow_lower=[26,50,50] #Good!
     yellow_upper=[49,255,255]
 
-    cyan_lower=[77,0,0] #Good!
+    cyan_lower=[77,50,50] #Good!
     cyan_upper=[105,255,255]
 
     blue_lower=[110,0,0] #Good!
